@@ -22,13 +22,13 @@ else
     </select>
     <label>Name</label>
     <input type="text" @bind="@p" class="form-control" />
-    <p>@p .</p>
     <button @onclick="UpdateID">Изменить</button>
+    <p>@o</p>
 }
 @code {
     List<User> users;
-    int a; string p = "";
-    
+    int a; string p, o = "";
+
     protected override void OnInitialized()
     {
         using (var db = DbFactory.CreateDbContext())
@@ -47,12 +47,13 @@ else
             using (var db = DbFactory.CreateDbContext())
             {
                 var u = db.Users.Where(o => o.Id == a).FirstOrDefault();
-                p = u.Name;
-                if (p != null && p != "")
+
+                if (u != null)
                 {
                     u.Name = p;
                     db.Users.Update(u);
                     db.SaveChanges();
+                    o = $"Изменён на {p}!";
                 }
             }
         }

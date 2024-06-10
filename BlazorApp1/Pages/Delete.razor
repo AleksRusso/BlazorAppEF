@@ -20,11 +20,13 @@ else
             <option value="@i.Id"> @i.Name </option>
         }
     </select>
+    
     <button @onclick="DeleteID">Удалить</button>
+    <h2>@str</h2>
 }
 @code {
     List<User> users;
-    int a;
+    int a; string str = "";
 
     protected override void OnInitialized()
     {
@@ -40,9 +42,12 @@ else
         {
             using (var db = DbFactory.CreateDbContext())
             {
+
                 var u = db.Users.Where(o => o.Id == a).FirstOrDefault();
+                str = $"Удалён пользователь {u.Name}";
                 db.Users.Remove(u);
                 db.SaveChanges();
+               
             }
         }
     }
