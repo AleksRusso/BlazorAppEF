@@ -1,0 +1,72 @@
+﻿@page "/second"
+@using BlazorApp1.Components;
+@using BlazorApp1.Data;
+@using Microsoft.EntityFrameworkCore;
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+
+<h3 class="f text-center">Добавление</h3>
+
+<link href="/css/first.css" rel="stylesheet" type="text/css" />
+<div class="row">
+    <div class="col">
+        <label>Name</label>
+    </div>
+    <div class="col">
+        <input type="text" @bind="@p" @onclick="Clear" class="form-control" />
+    </div>
+</div>
+<br /> 
+@* <form href=""> *@
+<button @onclick="Create" class="btn btn-primary float-end">Добавить</button>
+@* </form> *@
+<br />
+<br />
+<br />
+
+@if (s != "" && s != null)
+{
+    <Home f="@s"></Home>
+}
+
+
+@code {
+    string s = "", p;
+
+
+    public void Clear()
+    {
+        p = "";
+        s = "";
+    }
+
+    public void Create()
+    {
+        if (p != "" && p != null)
+        {
+            using (var db = DbFactory.CreateDbContext())
+            {
+                if (p != null)
+                {
+                    var user = new User { Name = p };
+                    db.Users.Add(user);
+                    db.SaveChanges();
+                    s = p;
+                }
+            }
+        }
+        else
+        {
+            s = "error";
+        }
+
+    }
+
+}
+
+
+@*
+<p id="output">Нажмите кнопку, чтобы увидеть сообщение</p>
+<button onclick="displayMessage()">Нажми меня</button>
+ *@
+
+

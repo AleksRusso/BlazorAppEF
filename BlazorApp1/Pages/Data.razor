@@ -1,0 +1,46 @@
+﻿@page "/data"
+
+<PageTitle>Список Users</PageTitle>
+@using Microsoft.EntityFrameworkCore
+@using BlazorApp1.Data
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+
+<h1>Users: </h1>
+
+
+@if (users == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>№</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var i in users)
+            {
+                <tr>
+                    <td>@i.Id</td>
+                    <td>@i.Name</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    List<User> users;
+
+    protected override void OnInitialized()
+    {
+        using (var db = DbFactory.CreateDbContext())
+        {
+            users = db.Users.ToList();
+        }
+    }
+}

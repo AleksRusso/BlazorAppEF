@@ -1,0 +1,63 @@
+﻿@page "/update"
+<h3>Update</h3>
+
+<PageTitle>Список Users</PageTitle>
+@using Microsoft.EntityFrameworkCore
+@using BlazorApp1.Data
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+
+
+
+@if (users == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <select @bind="@a">
+        @foreach (var i in users)
+        {
+            <option value="@i.Id"> @i.Name </option>
+        }
+    </select>
+    <label>Name</label>
+    <input type="text" @bind="@p" class="form-control" />
+    <p>@p .</p>
+    <button @onclick="UpdateID">Изменить</button>
+}
+@code {
+    List<User> users;
+    int a; string p = "";
+    
+    protected override void OnInitialized()
+    {
+        using (var db = DbFactory.CreateDbContext())
+        {
+            users = db.Users.ToList();
+            if (a != 0)
+            {
+                p = users.Where(o => o.Id == a).Select(o => o.Name).FirstOrDefault();
+            }
+        }
+    }
+    public void UpdateID()
+    {
+        if (a != 0)
+        {
+            using (var db = DbFactory.CreateDbContext())
+            {
+                var u = db.Users.Where(o => o.Id == a).FirstOrDefault();
+                p = u.Name;
+                if (p != null && p != "")
+                {
+                    u.Name = p;
+                    db.Users.Update(u);
+                    db.SaveChanges();
+                }
+            }
+        }
+    }
+}
+
+
+

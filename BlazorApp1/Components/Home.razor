@@ -1,0 +1,21 @@
+﻿@if (f != "error")
+{
+    <div style="display: inline-block;">
+        <h5 style="display: inline;">Привет, </h5>
+        <h5 style="color: red; display: inline; margin-left: 20px;">@f</h5>
+        <h5 style="display: inline; margin-left: 5px;">!</h5>
+    </div>
+    <h3 style="color:green">Вы успешно добавлены!</h3>
+}
+else
+{
+    <h5 style="color: red;">@f</h5>
+}
+@code {
+    [Parameter]
+    [EditorRequired]
+    public string f { get; set; } = "";
+}
+
+
+

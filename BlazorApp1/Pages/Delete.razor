@@ -1,0 +1,51 @@
+﻿@page "/delete"
+
+<PageTitle>Список Users</PageTitle>
+@using Microsoft.EntityFrameworkCore
+@using BlazorApp1.Data
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+
+<h1>Users: </h1>
+
+
+@if (users == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <select @bind="@a">
+        @foreach (var i in users)
+        {
+            <option value="@i.Id"> @i.Name </option>
+        }
+    </select>
+    <button @onclick="DeleteID">Удалить</button>
+}
+@code {
+    List<User> users;
+    int a;
+
+    protected override void OnInitialized()
+    {
+        using (var db = DbFactory.CreateDbContext())
+        {
+            users = db.Users.ToList();
+        }
+    }
+
+    public void DeleteID()
+    {
+        if (a != 0)
+        {
+            using (var db = DbFactory.CreateDbContext())
+            {
+                var u = db.Users.Where(o => o.Id == a).FirstOrDefault();
+                db.Users.Remove(u);
+                db.SaveChanges();
+            }
+        }
+    }
+}
+
+
